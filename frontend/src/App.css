@@ -1,0 +1,96 @@
+.App {
+  min-height: 100vh;
+  background: #fefbf8;
+}
+
+html, body {
+  scroll-behavior: smooth;
+  background: #fefbf8;
+  color: #171717;
+  font-family: 'Bricolage Grotesque', ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+/* Custom cursor */
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  border-radius: 9999px;
+  transform: translate(-50%, -50%);
+  will-change: transform;
+}
+.cursor-dot {
+  width: 6px;
+  height: 6px;
+  background: #ea580c;
+}
+.cursor-ring {
+  width: 34px;
+  height: 34px;
+  border: 1.5px solid rgba(234, 88, 12, 0.55);
+  transition: width 0.2s ease, height 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+.cursor-ring.hovered {
+  width: 56px;
+  height: 56px;
+  background: rgba(234, 88, 12, 0.12);
+  border-color: rgba(234, 88, 12, 0.9);
+}
+
+@media (max-width: 768px) {
+  .cursor-dot, .cursor-ring { display: none; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: #fefbf8; }
+::-webkit-scrollbar-thumb { background: #171717; border-radius: 9999px; border: 2px solid #fefbf8; }
+
+/* Marquee */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.marquee-track {
+  animation: marquee 22s linear infinite;
+}
+
+/* Grain */
+.grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/></svg>");
+}
+
+/* Text selection */
+::selection { background: #ea580c; color: white; }
+
+/* Gradient hairline */
+.hairline {
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(23,23,23,0.25), transparent);
+}
+
+/* 3D tilt card wrapper */
+.tilt-card {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+/* Blob glow */
+.blob {
+  position: absolute;
+  filter: blur(80px);
+  opacity: 0.55;
+  border-radius: 9999px;
+  pointer-events: none;
+}
