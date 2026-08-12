@@ -1,11 +1,18 @@
 import React, { useEffect, useRef } from "react";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { Gem, ArrowUpRight, Download, Github, Linkedin, Mail } from "lucide-react";
 
 const orbitItems = ["React", "Next.js", "Node", "TS", "Mongo", "AWS"];
 
 const Hero = () => {
   const glowRef = useRef(null);
+  const sectionRef = useRef(null);
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start start", "end start"] });
+  const blobY1 = useTransform(scrollYProgress, [0, 1], [0, 180]);
+  const blobY2 = useTransform(scrollYProgress, [0, 1], [0, -160]);
+  const contentY = useTransform(scrollYProgress, [0, 1], [0, 120]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  const orbitScale = useTransform(scrollYProgress, [0, 1], [1, 0.85]);
 
   useEffect(() => {
     const move = (e) => {
@@ -31,14 +38,15 @@ const Hero = () => {
 
   return (
     <section
+      ref={sectionRef}
       id="hero"
       className="relative overflow-hidden min-h-screen w-full pt-28 pb-16 px-6 lg:px-12"
     >
-      {/* soft background blobs */}
-      <div className="blob bg-orange-300 w-[420px] h-[420px] -top-20 -left-20" />
-      <div className="blob bg-amber-200 w-[520px] h-[520px] -bottom-40 -right-40" />
+      {/* soft background blobs with scroll parallax */}
+      <motion.div style={{ y: blobY1 }} className="blob bg-orange-300 w-[420px] h-[420px] -top-20 -left-20" />
+      <motion.div style={{ y: blobY2 }} className="blob bg-amber-200 w-[520px] h-[520px] -bottom-40 -right-40" />
 
-      <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-14 items-center">
+      <motion.div style={{ y: contentY, opacity: contentOpacity }} className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-14 items-center">
         {/* LEFT */}
         <motion.div variants={container} initial="hidden" animate="show" className="relative z-10">
           <motion.div variants={item} className="flex items-center gap-2 text-orange-600 font-mono text-sm mb-4">
@@ -94,6 +102,7 @@ const Hero = () => {
           initial={{ opacity: 0, scale: 0.85 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 2.6, duration: 0.9, ease: "easeOut" }}
+          style={{ scale: orbitScale }}
           className="relative w-full h-[420px] sm:h-[520px] lg:h-[600px] flex items-center justify-center"
         >
           <div
@@ -149,7 +158,7 @@ const Hero = () => {
             />
           </motion.div>
         </motion.div>
-      </div>
+      </motion.div>
 
       {/* scroll cue */}
       <motion.div

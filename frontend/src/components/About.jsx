@@ -1,11 +1,12 @@
-import React from "react";
-import { motion } from "framer-motion";
-import { FaJs, FaPython, FaDocker, FaGitAlt, FaAws } from "react-icons/fa";
+import React, { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { FaJs, FaPython, FaDocker, FaGitAlt } from "react-icons/fa";
 import {
   SiTypescript, SiMongodb, SiPostgresql, SiFirebase, SiFigma,
   SiTailwindcss, SiReact, SiNextdotjs, SiNodedotjs, SiExpress,
 } from "react-icons/si";
 import { focusCards } from "../mock/data";
+import { RevealText } from "./RevealText";
 
 const techIcons = [
   { Icon: FaJs, name: "JavaScript", color: "text-yellow-400" },
@@ -22,12 +23,17 @@ const techIcons = [
   { Icon: FaGitAlt, name: "Git", color: "text-red-400" },
   { Icon: FaDocker, name: "Docker", color: "text-blue-500" },
   { Icon: SiFigma, name: "Figma", color: "text-pink-400" },
-  { Icon: FaAws, name: "AWS", color: "text-yellow-400" },
 ];
 
 const About = () => {
+  const wrapRef = useRef(null);
+  const { scrollYProgress } = useScroll({ target: wrapRef, offset: ["start end", "end start"] });
+  const codeY = useTransform(scrollYProgress, [0, 1], [60, -60]);
+  const rightY = useTransform(scrollYProgress, [0, 1], [40, -40]);
+  const rot = useTransform(scrollYProgress, [0, 1], [-2, 2]);
+
   return (
-    <section id="about" className="px-3 sm:px-6 py-10">
+    <section id="about" ref={wrapRef} className="px-3 sm:px-6 py-10">
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -49,10 +55,10 @@ const About = () => {
           {/* Left */}
           <div className="flex-1 space-y-4">
             <p className="text-orange-500 font-mono text-lg">{`<about>`}</p>
-            <h2 className="text-4xl lg:text-6xl font-bold leading-tight text-gray-100">About Me</h2>
+            <RevealText as="h2" text="About Me" className="text-4xl lg:text-6xl font-bold leading-tight text-gray-100" />
 
-            {/* Code card */}
-            <div className="bg-[#0e0e10] border border-white/5 rounded-xl overflow-hidden p-5 sm:p-6 shadow-2xl w-full max-w-xl">
+            {/* Code card with parallax */}
+            <motion.div style={{ y: codeY, rotate: rot }} className="bg-[#0e0e10] border border-white/5 rounded-xl overflow-hidden p-5 sm:p-6 shadow-2xl w-full max-w-xl">
               <div className="flex gap-1.5 mb-3">
                 <span className="w-3 h-3 rounded-full bg-red-500/70" />
                 <span className="w-3 h-3 rounded-full bg-yellow-400/70" />
@@ -84,12 +90,11 @@ const About = () => {
                   &nbsp;&nbsp;<span className="text-green-400">tools</span>: [
                   <span className="text-red-300">'Git'</span>,{" "}
                   <span className="text-blue-500">'Docker'</span>,{" "}
-                  <span className="text-pink-300">'Figma'</span>,{" "}
-                  <span className="text-yellow-400">'AWS'</span>]{"\n"}
+                  <span className="text-pink-300">'Figma'</span>]{"\n"}
                   <span className="text-white">&#125;;</span>
                 </code>
               </pre>
-            </div>
+            </motion.div>
 
             {/* Marquee */}
             <div className="overflow-hidden w-full max-w-xl mt-6 relative">
@@ -109,7 +114,7 @@ const About = () => {
           </div>
 
           {/* Right */}
-          <div className="flex-1 space-y-10 max-w-xl">
+          <motion.div style={{ y: rightY }} className="flex-1 space-y-10 max-w-xl">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -149,7 +154,7 @@ const About = () => {
                 ))}
               </div>
             </motion.div>
-          </div>
+          </motion.div>
         </div>
       </motion.div>
     </section>

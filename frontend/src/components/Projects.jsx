@@ -1,7 +1,8 @@
 import React, { useRef, useState } from "react";
-import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
+import { motion, useMotionValue, useTransform, useSpring, useScroll } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { projects } from "../mock/data";
+import { RevealText } from "./RevealText";
 
 const TiltCard = ({ project, index }) => {
   const ref = useRef(null);
@@ -87,8 +88,12 @@ const TiltCard = ({ project, index }) => {
 };
 
 const Projects = () => {
+  const sectionRef = useRef(null);
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start end", "end start"] });
+  const dotY = useTransform(scrollYProgress, [0, 1], [0, 220]);
+
   return (
-    <section id="projects" className="relative bg-[#fefbf8] px-4 sm:px-6 lg:px-12 py-20">
+    <section ref={sectionRef} id="projects" className="relative bg-[#fefbf8] px-4 sm:px-6 lg:px-12 py-20">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <motion.p
@@ -99,15 +104,11 @@ const Projects = () => {
           >
             &lt;projects/&gt;
           </motion.p>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+          <RevealText
+            as="h2"
+            tokens={[{ text: "Selected" }, { text: "Work", className: "text-orange-600" }]}
             className="text-4xl sm:text-5xl lg:text-6xl font-bold text-black"
-          >
-            Selected <span className="text-orange-600">Work</span>
-          </motion.h2>
+          />
           <motion.p
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
@@ -120,13 +121,14 @@ const Projects = () => {
         </div>
 
         <div className="relative rounded-3xl bg-black p-6 sm:p-10 overflow-hidden">
-          {/* dot pattern */}
-          <div
-            className="absolute inset-0 opacity-[0.08] pointer-events-none"
+          {/* dot pattern with scroll parallax */}
+          <motion.div
             style={{
+              y: dotY,
               backgroundImage: "radial-gradient(#ffffff 1px, transparent 1px)",
               backgroundSize: "22px 22px",
             }}
+            className="absolute -inset-y-32 inset-x-0 opacity-[0.09] pointer-events-none"
           />
           <div className="relative grid grid-cols-1 md:grid-cols-2 gap-8">
             {projects.map((p, i) => (

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, MapPin, Github, Linkedin, Globe, Send, Loader2, Check } from "lucide-react";
 import { useToast } from "../hooks/use-toast";
+import { RevealText } from "./RevealText";
 
 const inputBase =
   "w-full bg-transparent border border-orange-600/40 text-white placeholder:text-gray-500 rounded-lg px-4 py-3 outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition";
@@ -36,9 +37,11 @@ const Contact = () => {
           className="space-y-8"
         >
           <p className="text-orange-600 font-mono text-sm">&lt;contact&gt;</p>
-          <h2 className="text-5xl lg:text-6xl font-bold leading-tight text-black">
-            Let's <span className="text-orange-600">Create</span>
-          </h2>
+          <RevealText
+            as="h2"
+            tokens={[{ text: "Let\u2019s" }, { text: "Create", className: "text-orange-600" }]}
+            className="text-5xl lg:text-6xl font-bold leading-tight text-black"
+          />
           <p className="text-gray-600 text-lg leading-relaxed max-w-md">
             I'm currently available for freelance work and open to discussing new opportunities. If you have a project that needs some creative coding, let's talk!
           </p>
