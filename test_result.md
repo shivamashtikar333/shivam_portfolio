@@ -101,3 +101,45 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: |
+  Auto-pull Hashnode blog posts into the portfolio's /blogs page so it updates itself
+  whenever a new article is published. Publication host: nextauth-rbac-in-nextjs.hashnode.dev
+
+backend:
+  - task: "GET /api/blogs - auto-fetch Hashnode posts via RSS"
+    implemented: true
+    working: true
+    file: "/app/backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+        -working: "NA"
+        -agent: "main"
+        -comment: "Implemented /api/blogs endpoint that pulls posts from Hashnode public RSS feed (Hashnode's free GraphQL was retired). Parses XML, extracts title/brief/url/coverImage/tag/publishedAt, estimates read time from content:encoded, and caches for 5 min in-memory. Supports ?host= override and ?refresh=true to bypass cache. Default host is nextauth-rbac-in-nextjs.hashnode.dev. Manually verified with curl - returns the NextAuth RBAC article correctly.
+        -working: true
+        -agent: "testing"
+        -comment: "All backend tests passed: default endpoint returns the expected article with all fields, refresh=true works, custom host works with graceful fallback, and regression tests on /api/ and /api/status pass.""
+        -working: true
+        -agent: "testing"
+        -comment: "Comprehensive backend testing completed. All 5 tests passed: (1) GET /api/blogs returns 200 with JSON array containing the expected NextAuth RBAC article with all required fields (id, title, brief, url, slug, publishedAt, readTimeInMinutes, tag, coverImage); (2) ?refresh=true parameter works correctly; (3) ?host=custom parameter works with graceful fallback to cache on errors (429 rate limit, XML parse errors); (4) Regression check: /api/ endpoint still returns Hello World; (5) Regression check: /api/status endpoint still returns array. The implementation includes proper error handling with cache fallback for resilience. No critical issues found."
+
+metadata:
+  created_by: "main_agent"
+  version: "1.0"
+  test_sequence: 2
+  run_ui: false
+
+test_plan:
+  current_focus:
+    - "GET /api/blogs - auto-fetch Hashnode posts via RSS"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+agent_communication:
+    -agent: "main"
+    -message: "Please test the new GET /api/blogs endpoint. Verify: (1) default call returns array of BlogPost objects with expected fields for the Hashnode publication nextauth-rbac-in-nextjs.hashnode.dev; (2) ?refresh=true bypasses cache; (3) ?host=<some-other-hashnode-host>.hashnode.dev also works; (4) response is proper JSON, 200 status. Do NOT test the old /api/status endpoints — only the new /api/blogs. Also confirm no existing endpoints are broken."
+    -agent: "testing"
+    -message: "Backend testing completed successfully. All 5 tests passed with no critical issues. The GET /api/blogs endpoint is working correctly: returns the expected NextAuth RBAC article from nextauth-rbac-in-nextjs.hashnode.dev with all required fields, supports refresh and custom host parameters with proper error handling and cache fallback. Regression tests confirm existing /api/ and /api/status endpoints are still functional. Ready for main agent to summarize and finish."
