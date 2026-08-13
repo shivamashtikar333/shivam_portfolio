@@ -207,3 +207,42 @@ logger = logging.getLogger(__name__)
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()
+
+
+#---------------------------- Contact Form Handling ----------------------------
+
+from pydantic import EmailStr
+from email.message import EmailMessage
+import aiosmtplib
+
+
+class ContactForm(BaseModel):
+    name: str
+    email: EmailStr
+    message: str
+
+@api_router.post("/contact")
+async def send_contact(form: ContactForm):
+    msg = EmailMessage()
+    msg["From"] = os.environ["SMTP_USER"]              # sender (your SMTP account)
+    msg["To"] = os.environ["CONTACT_EMAIL"]            # your personal inbox
+    msg["Subject"] = f"Portfolio Contact Form - {form.name}"
+    msg.set_content(
+        f"Name: {form.name}\n"
+        f"Email: {form.email}\n\n"
+        f"Message:\n{form.message}"
+    )
+
+    try:
+        await aiosmtplib.send(
+            msg,
+            hostname=os.environ["SMTP_HOST"],
+            port=int(os.environ.get("SMTP_PORT", 587)),
+            start_tls=True,
+            username=os.environ["SMTP_USER"],
+            password=os.environ["SMTP_PASS"],
+        )
+        return {"success": True, "message": "Message sent successfully"}
+    except Exception as e:
+        logger.exception("Failed to send contact form email")
+        raise HTTPException(status_code=500, detail="Failed to send message")

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const Preloader = ({ onDone }) => {
@@ -16,18 +16,21 @@ const Preloader = ({ onDone }) => {
     <AnimatePresence>
       {!done && (
         <motion.div
-          className="fixed inset-0 z-[100] bg-black overflow-hidden flex items-end"
+          className="fixed inset-0 z-[100] bg-black flex items-center justify-center overflow-hidden"
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5 }}
         >
+          {/* Centered Text */}
           <motion.div
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center"
+            className="relative z-20 text-center"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            <div className="text-white/60 text-xs tracking-[0.3em] mb-2">LOADING PORTFOLIO</div>
+            <div className="text-white/60 text-xs tracking-[0.3em] mb-2">
+              LOADING PORTFOLIO
+            </div>
             <div className="text-4xl sm:text-5xl font-semibold text-white">
               &lt;Shivam <span className="text-orange-500">/</span>&gt;
             </div>
@@ -38,8 +41,10 @@ const Preloader = ({ onDone }) => {
               transition={{ duration: 1.6, ease: "easeInOut" }}
             />
           </motion.div>
+
+          {/* Arc animation */}
           <motion.div
-            className="w-full bg-[#fefbf8] rounded-t-[100%]"
+            className="absolute bottom-0 w-full bg-[#fefbf8] rounded-t-full"
             initial={{ height: 0 }}
             animate={{ height: "100vh" }}
             transition={{ duration: 1.4, delay: 0.7, ease: [0.76, 0, 0.24, 1] }}

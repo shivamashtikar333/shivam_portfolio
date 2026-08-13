@@ -14,16 +14,21 @@ const Contact = () => {
 
   const onChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
-  const onSubmit = async (e) => {
-    e.preventDefault();
-    setStatus("loading");
-    // MOCK: simulate API
-    await new Promise((r) => setTimeout(r, 1100));
+ const onSubmit = async (e) => {
+  e.preventDefault();
+  setStatus("loading");
+  try {
+    await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/contact`, form);
     setStatus("success");
     toast({ title: "Message sent ✨", description: "I'll get back to you soon, promise." });
     setForm({ name: "", email: "", message: "" });
-    setTimeout(() => setStatus("idle"), 2200);
-  };
+  } catch (err) {
+    setStatus("idle");
+    toast({ title: "Error", description: "Failed to send message. Please try again." });
+  }
+  setTimeout(() => setStatus("idle"), 2200);
+};
+
 
   return (
     <section id="contact" className="bg-[#fefbf8] px-4 sm:px-6 lg:px-12 py-20">
