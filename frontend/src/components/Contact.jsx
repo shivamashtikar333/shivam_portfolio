@@ -25,6 +25,7 @@ const Contact = () => {
   } catch (err) {
     setStatus("idle");
     toast({ title: "Error", description: "Failed to send message. Please try again." });
+    console.error(err);
   }
   setTimeout(() => setStatus("idle"), 2200);
 };
