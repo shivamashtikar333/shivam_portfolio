@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Mail, MapPin, Github, Linkedin, Globe, Send, Loader2, Check } from "lucide-react";
 import { useToast } from "../hooks/use-toast";
 import { RevealText } from "./RevealText";
+import axios from "axios";
 
 const inputBase =
   "w-full bg-transparent border border-orange-600/40 text-white placeholder:text-gray-500 rounded-lg px-4 py-3 outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition";
