@@ -188,7 +188,8 @@ async def send_contact(form: ContactForm):
         return {"success": True, "message": "Message sent successfully"}
     except Exception as e:
         logger.exception("Failed to send contact form email")
-        raise HTTPException(status_code=500, detail="Failed to send message")
+        raise HTTPException(status_code=500, detail=f"SMTP error: {str(e)}")
+
 
 # ---------------- App Setup ----------------
 app.include_router(api_router)
