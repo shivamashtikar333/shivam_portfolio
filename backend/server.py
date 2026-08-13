@@ -86,7 +86,7 @@ class BlogPost(BaseModel):
     coverImage: Optional[str] = None
 
 
-HASHNODE_HOST = os.environ.get("HASHNODE_HOST", "nextauth-rbac-in-nextjs.hashnode.dev")
+HASHNODE_HOST = os.environ.get("HASHNODE_HOST", "shivamashtikar.hashnode.dev")
 
 _hashnode_cache = {"ts": 0.0, "data": None, "host": None}
 _HASHNODE_TTL = 300  # 5 min
