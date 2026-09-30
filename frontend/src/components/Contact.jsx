@@ -1,141 +1,70 @@
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
-import { Mail, MapPin, Github, Linkedin, Globe, Send, Loader2, Check } from "lucide-react";
-import { useToast } from "../hooks/use-toast";
-import { RevealText } from "./RevealText";
-import axios from "axios";
+import { ArrowUpRight, Github, Linkedin, Mail } from "lucide-react";
 
-const inputBase =
-  "w-full bg-transparent border border-orange-600/40 text-white placeholder:text-gray-500 rounded-lg px-4 py-3 outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition";
+const email = "shivamaashtikar@gmail.com";
 
-const Contact = () => {
-  const { toast } = useToast();
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
-  const [status, setStatus] = useState("idle"); // idle | loading | success
+const socialLinks = [
+  { label: "GitHub", Icon: Github, href: "https://github.com/shivamashtikar333" },
+  { label: "LinkedIn", Icon: Linkedin, href: "https://www.linkedin.com/in/shivam-ashtikar/" },
+  { label: "Email", Icon: Mail, href: `mailto:${email}` },
+];
 
-  const onChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
-
- const onSubmit = async (e) => {
-  e.preventDefault();
-  setStatus("loading");
-  try {
-    await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/contact`, form);
-    setStatus("success");
-    toast({ title: "Message sent ✨", description: "I'll get back to you soon, promise." });
-    setForm({ name: "", email: "", message: "" });
-  } catch (err) {
-    setStatus("idle");
-    toast({ title: "Error", description: "Failed to send message. Please try again." });
-    console.error(err);
-  }
-  setTimeout(() => setStatus("idle"), 2200);
-};
-
-
-  return (
-    <section id="contact" className="bg-[#fefbf8] px-4 sm:px-6 lg:px-12 py-20">
-      <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-10 items-start">
-        {/* Left */}
+const Contact = () => (
+  <section id="contact" className="contact-section text-white px-6 sm:px-10 lg:px-12 pt-24 sm:pt-28 pb-8">
+    <div className="max-w-7xl mx-auto">
+      <div className="min-h-[440px] grid lg:grid-cols-[minmax(0,1fr)_auto] items-end gap-14 lg:gap-10 pb-20 sm:pb-24">
         <motion.div
-          initial={{ opacity: 0, x: -30 }}
-          whileInView={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="space-y-8"
+          transition={{ duration: 0.65 }}
         >
-          <p className="text-orange-600 font-mono text-sm">&lt;contact&gt;</p>
-          <RevealText
-            as="h2"
-            tokens={[{ text: "Let\u2019s" }, { text: "Create", className: "text-orange-600" }]}
-            className="text-5xl lg:text-6xl font-bold leading-tight text-black"
-          />
-          <p className="text-gray-600 text-lg leading-relaxed max-w-md">
-            I'm currently available for freelance work and open to discussing new opportunities. If you have a project that needs some creative coding, let's talk!
-          </p>
+          <p className="font-mono text-lg sm:text-xl tracking-wide text-[#ed7b2f] mb-7">&lt;let&apos;s-talk/&gt;</p>
+          <h2 className="font-bold tracking-[-0.055em] leading-[0.98] text-6xl sm:text-7xl lg:text-8xl">
+            <span className="block">Have an idea?</span>
+            <span className="block text-[#ed7b2f]">Let&apos;s build it.</span>
+          </h2>
+          <a
+            href={`mailto:${email}`}
+            className="group inline-flex items-center gap-3 mt-12 text-xl sm:text-2xl lg:text-3xl font-semibold tracking-tight hover:text-[#ed7b2f] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ed7b2f]"
+          >
+            <span>{email}</span>
+            <ArrowUpRight aria-hidden="true" className="w-7 h-7 sm:w-8 sm:h-8 shrink-0 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+          </a>
+        </motion.div>
 
-          <div className="space-y-5">
-            {[
-              { Icon: Mail, label: "Email", value: "shivamaashtikar@gmail.com", href: "mailto:shivamaashtikar@gmail.com" },
-              { Icon: MapPin, label: "Location", value: "Mumbai, India" },
-            ].map(({ Icon, label, value, href }) => (
-              <a key={label} href={href || "#"} className="flex items-center gap-4 group">
-                <div className="w-12 h-12 bg-black rounded-full flex items-center justify-center group-hover:bg-orange-600 transition-colors">
-                  <Icon className="w-5 h-5 text-orange-500 group-hover:text-white" />
-                </div>
-                <div>
-                  <div className="font-semibold text-orange-600">{label}</div>
-                  <div className="text-gray-700">{value}</div>
-                </div>
-              </a>
-            ))}
-          </div>
-
-          <div className="flex gap-3">
-            {[
-              { Icon: Github, href: "https://github.com/shivamashtikar333" },
-              { Icon: Linkedin, href: "https://www.linkedin.com/in/shivam-ashtikar/" },
-              { Icon: Globe, href: "#" },
-            ].map(({ Icon, href }, i) => (
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.65, delay: 0.12 }}
+          className="lg:pb-1"
+        >
+          <p className="font-mono text-sm sm:text-base tracking-[0.24em] text-gray-500 mb-6">ELSEWHERE</p>
+          <nav aria-label="Social links" className="flex items-center gap-4 sm:gap-5">
+            {socialLinks.map(({ label, Icon, href }) => (
               <a
-                key={i}
+                key={label}
                 href={href}
-                target="_blank"
-                rel="noreferrer"
-                className="w-12 h-12 rounded-full bg-black text-white flex items-center justify-center hover:bg-orange-600 hover:text-white transition-colors"
+                aria-label={label}
+                target={href.startsWith("https://") ? "_blank" : undefined}
+                rel={href.startsWith("https://") ? "noreferrer" : undefined}
+                className="w-[72px] h-[72px] sm:w-[88px] sm:h-[88px] rounded-full border border-white/15 text-white flex items-center justify-center hover:border-[#ed7b2f] hover:bg-[#ed7b2f] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ed7b2f]"
               >
-                <Icon className="w-5 h-5" />
+                <Icon aria-hidden="true" className="w-7 h-7" strokeWidth={2} />
               </a>
             ))}
-          </div>
-
-          <p className="text-orange-500 font-mono text-sm">&lt;/contact&gt;</p>
-        </motion.div>
-
-        {/* Right */}
-        <motion.div
-          initial={{ opacity: 0, x: 30 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="relative"
-        >
-          <div className="absolute -inset-2 bg-gradient-to-br from-orange-500/20 to-transparent rounded-3xl blur-2xl" />
-          <div className="relative bg-black border border-orange-600/50 rounded-2xl p-6 sm:p-8 shadow-2xl">
-            <h3 className="text-2xl font-bold text-white mb-6">Send a Message</h3>
-            <form onSubmit={onSubmit} className="space-y-5">
-              <div>
-                <label className="block text-sm text-gray-300 mb-1.5">Name</label>
-                <input name="name" required value={form.name} onChange={onChange} placeholder="Your name" className={inputBase} />
-              </div>
-              <div>
-                <label className="block text-sm text-gray-300 mb-1.5">Email</label>
-                <input type="email" name="email" required value={form.email} onChange={onChange} placeholder="you@example.com" className={inputBase} />
-              </div>
-              <div>
-                <label className="block text-sm text-gray-300 mb-1.5">Message</label>
-                <textarea name="message" required rows={5} value={form.message} onChange={onChange} placeholder="Tell me about your idea…" className={`${inputBase} resize-none`} />
-              </div>
-              <button
-                type="submit"
-                disabled={status !== "idle"}
-                className="w-full py-3 rounded-lg bg-orange-500 hover:bg-orange-600 disabled:opacity-70 text-white font-semibold flex items-center justify-center gap-2 transition-colors"
-              >
-                {status === "loading" && <><Loader2 className="w-4 h-4 animate-spin" /> Sending…</>}
-                {status === "success" && <><Check className="w-4 h-4" /> Sent</>}
-                {status === "idle" && <>Send Message <Send className="w-4 h-4" /></>}
-              </button>
-            </form>
-          </div>
+          </nav>
         </motion.div>
       </div>
 
-      {/* Footer */}
-      <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-black/10 flex flex-col sm:flex-row justify-between items-center gap-3 text-sm text-gray-500">
+      <footer className="border-t border-white/10 pt-7 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 text-gray-500 text-base sm:text-lg">
         <p>© {new Date().getFullYear()} Shivam Ashtikar. Crafted with care.</p>
-        <p>Think. Build. Learn.</p>
-      </div>
-    </section>
-  );
-};
+        <p className="font-mono text-sm sm:text-base">Think. Build. Learn.</p>
+      </footer>
+    </div>
+  </section>
+);
 
 export default Contact;

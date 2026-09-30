@@ -12,6 +12,22 @@ html, body {
 
 * { box-sizing: border-box; }
 
+/* Dark contact section with the subtle dot grid from the design reference. */
+.contact-section {
+  position: relative;
+  isolation: isolate;
+  background-color: #050505;
+}
+.contact-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1.25px, transparent 1.5px);
+  background-size: 44px 44px;
+}
+
 /* Custom cursor */
 .cursor-dot,
 .cursor-ring {

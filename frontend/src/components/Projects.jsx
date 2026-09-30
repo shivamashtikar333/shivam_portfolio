@@ -1,8 +1,9 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion, useMotionValue, useTransform, useSpring, useScroll } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { projects } from "../mock/data";
 import { RevealText } from "./RevealText";
+import { portfolioApi } from "../lib/portfolioApi";
 
 const TiltCard = ({ project, index }) => {
   const ref = useRef(null);
@@ -53,7 +54,7 @@ const TiltCard = ({ project, index }) => {
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
           <div className="absolute top-4 left-4 text-xs font-mono text-orange-400">
-            0{project.id}
+            {project.id}
           </div>
         </div>
 
@@ -88,9 +89,22 @@ const TiltCard = ({ project, index }) => {
 };
 
 const Projects = () => {
+  const [visibleProjects, setVisibleProjects] = useState(projects);
   const sectionRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ["start end", "end start"] });
   const dotY = useTransform(scrollYProgress, [0, 1], [0, 220]);
+
+  useEffect(() => {
+    let active = true;
+    portfolioApi.get("/projects")
+      .then(({ data }) => {
+        if (active && Array.isArray(data)) setVisibleProjects(data);
+      })
+      .catch(() => {
+        // Keep the bundled showcase available while the API is offline.
+      });
+    return () => { active = false; };
+  }, []);
 
   return (
     <section ref={sectionRef} id="projects" className="relative bg-[#fefbf8] px-4 sm:px-6 lg:px-12 py-20">
@@ -131,8 +145,8 @@ const Projects = () => {
             className="absolute -inset-y-32 inset-x-0 opacity-[0.09] pointer-events-none"
           />
           <div className="relative grid grid-cols-1 md:grid-cols-2 gap-8">
-            {projects.map((p, i) => (
-              <TiltCard key={p.id} project={p} index={i} />
+            {visibleProjects.map((p, i) => (
+              <TiltCard key={p.id || `${p.title}-${i}`} project={{ ...p, id: String(i + 1).padStart(2, "0") }} index={i} />
             ))}
           </div>
         </div>

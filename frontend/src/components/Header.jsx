@@ -1,5 +1,5 @@
-import React, { useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { BookOpen, Menu, X } from "lucide-react";
 
@@ -30,6 +30,9 @@ const MagneticButton = ({ children, className = "", href, onClick }) => {
   );
 
   if (href) {
+    if (href.startsWith("/")) {
+      return <Link to={href}>{inner}</Link>;
+    }
     return (
       <a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noreferrer">
         {inner}
@@ -41,12 +44,24 @@ const MagneticButton = ({ children, className = "", href, onClick }) => {
 
 const Header = () => {
   const [open, setOpen] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname !== "/" || !location.hash) return;
+
+    const sectionId = decodeURIComponent(location.hash.slice(1));
+    const frame = window.requestAnimationFrame(() => {
+      document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [location.pathname, location.hash]);
 
   const links = [
-    { label: "Home", href: "#hero" },
-    { label: "About", href: "#about" },
-    { label: "Projects", href: "#projects" },
-    { label: "Contact", href: "#contact" },
+    { label: "Home", href: "/#hero" },
+    { label: "About", href: "/#about" },
+    { label: "Career", href: "/#career" },
+    { label: "Projects", href: "/#projects" },
+    { label: "Contact", href: "/#contact" },
   ];
 
   return (
@@ -57,10 +72,10 @@ const Header = () => {
       className="fixed top-0 inset-x-0 z-[70] bg-[#fefbf8]/70 backdrop-blur-md border-b border-black/5"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-        <a href="#hero" className="text-xl font-bold flex items-center text-[#171717]" data-cursor="hover">
+        <Link to="/#hero" className="text-xl font-bold flex items-center text-[#171717]" data-cursor="hover">
           &lt;Shivam <span className="text-orange-600 text-2xl leading-none">/</span>&gt;
           <span className="text-orange-600 text-2xl leading-none">.</span>
-        </a>
+        </Link>
 
         <nav className="hidden md:flex items-center gap-1">
           {links.map((l) => (
@@ -91,9 +106,9 @@ const Header = () => {
           className="md:hidden px-6 pb-4 flex flex-col gap-2 bg-[#fefbf8]/95"
         >
           {links.map((l) => (
-            <a key={l.label} href={l.href} onClick={() => setOpen(false)} className="py-2 text-[#171717] font-medium">
+            <Link key={l.label} to={l.href} onClick={() => setOpen(false)} className="py-2 text-[#171717] font-medium">
               {l.label}
-            </a>
+            </Link>
           ))}
           <Link to="/blogs" onClick={() => setOpen(false)} className="py-2 text-orange-600 font-semibold">Blogs</Link>
         </motion.nav>

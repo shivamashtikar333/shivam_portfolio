@@ -1,36 +1,33 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { FaJs, FaPython, FaDocker, FaGitAlt } from "react-icons/fa";
-import {
-  SiTypescript, SiMongodb, SiPostgresql, SiFirebase, SiFigma,
-  SiTailwindcss, SiReact, SiNextdotjs, SiNodedotjs, SiExpress,
-} from "react-icons/si";
 import { focusCards } from "../mock/data";
 import { RevealText } from "./RevealText";
+import { portfolioApi } from "../lib/portfolioApi";
+import { skillIconMap } from "../lib/skillIcons";
 
-const techIcons = [
-  { Icon: FaJs, name: "JavaScript", color: "text-yellow-400" },
-  { Icon: SiTypescript, name: "TypeScript", color: "text-blue-400" },
-  { Icon: FaPython, name: "Python", color: "text-yellow-300" },
-  { Icon: SiReact, name: "React", color: "text-cyan-400" },
-  { Icon: SiNextdotjs, name: "Next.js", color: "text-white" },
-  { Icon: SiTailwindcss, name: "Tailwind", color: "text-sky-400" },
-  { Icon: SiNodedotjs, name: "Node.js", color: "text-green-400" },
-  { Icon: SiExpress, name: "Express", color: "text-gray-300" },
-  { Icon: SiMongodb, name: "MongoDB", color: "text-emerald-400" },
-  { Icon: SiPostgresql, name: "Postgres", color: "text-blue-300" },
-  { Icon: SiFirebase, name: "Firebase", color: "text-orange-300" },
-  { Icon: FaGitAlt, name: "Git", color: "text-red-400" },
-  { Icon: FaDocker, name: "Docker", color: "text-blue-500" },
-  { Icon: SiFigma, name: "Figma", color: "text-pink-400" },
+const defaultSkills = [
+  ["javascript", "JavaScript"], ["typescript", "TypeScript"], ["python", "Python"],
+  ["react", "React"], ["nextjs", "Next.js"], ["tailwind", "Tailwind"],
+  ["nodejs", "Node.js"], ["express", "Express"], ["mongodb", "MongoDB"],
+  ["postgres", "Postgres"], ["firebase", "Firebase"], ["git", "Git"],
+  ["docker", "Docker"], ["figma", "Figma"],
 ];
 
 const About = () => {
+  const [skills, setSkills] = useState(defaultSkills.map(([icon, name]) => ({ id: icon, icon, name })));
   const wrapRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: wrapRef, offset: ["start end", "end start"] });
   const codeY = useTransform(scrollYProgress, [0, 1], [60, -60]);
   const rightY = useTransform(scrollYProgress, [0, 1], [40, -40]);
   const rot = useTransform(scrollYProgress, [0, 1], [-2, 2]);
+
+  useEffect(() => {
+    let active = true;
+    portfolioApi.get("/skills")
+      .then(({ data }) => { if (active && Array.isArray(data)) setSkills(data); })
+      .catch(() => {});
+    return () => { active = false; };
+  }, []);
 
   return (
     <section id="about" ref={wrapRef} className="px-3 sm:px-6 py-10">
@@ -101,12 +98,14 @@ const About = () => {
               <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-black to-transparent z-10" />
               <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-black to-transparent z-10" />
               <div className="flex gap-10 w-max marquee-track">
-                {[...techIcons, ...techIcons].map(({ Icon, name, color }, i) => (
-                  <div key={i} className="flex flex-col items-center gap-1 min-w-[56px]">
-                    <Icon className={`text-3xl ${color} hover:scale-125 transition-transform duration-300`} />
-                    <span className="text-[10px] text-gray-500">{name}</span>
+                {[...skills, ...skills].map((skill, i) => {
+                  const visual = skillIconMap[skill.icon] || skillIconMap.code;
+                  const Icon = visual.Icon;
+                  return <div key={`${skill.id || skill.name}-${i}`} className="flex flex-col items-center gap-1 min-w-[56px]">
+                    <Icon className={`text-3xl ${visual.color} hover:scale-125 transition-transform duration-300`} />
+                    <span className="text-[10px] text-gray-500">{skill.name}</span>
                   </div>
-                ))}
+                })}
               </div>
             </div>
 

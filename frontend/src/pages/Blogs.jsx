@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ArrowLeft, Calendar, Clock, ArrowUpRight, Tag, RefreshCw, Loader2, AlertTriangle } from "lucide-react";
-
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-const API = `${BACKEND_URL}/api`;
+import { portfolioApi } from "../lib/portfolioApi";
 
 const formatDate = (raw) => {
   if (!raw) return "";
@@ -28,8 +25,9 @@ const Blogs = () => {
       if (opts.refresh) setRefreshing(true);
       else setLoading(true);
       setError(null);
-      const url = `${API}/blogs${opts.refresh ? "?refresh=true" : ""}`;
-      const { data } = await axios.get(url);
+      const { data } = await portfolioApi.get("/blogs", {
+        params: opts.refresh ? { refresh: true } : undefined,
+      });
       setPosts(Array.isArray(data) ? data : []);
     } catch (e) {
       console.error(e);
