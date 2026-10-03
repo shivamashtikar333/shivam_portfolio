@@ -30,13 +30,13 @@ const About = () => {
   }, []);
 
   return (
-    <section id="about" ref={wrapRef} className="px-3 sm:px-6 py-10">
+    <section id="about" ref={wrapRef} className="w-full min-w-0 overflow-x-clip px-3 sm:px-6 py-10">
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8 }}
-        className="relative overflow-hidden rounded-3xl bg-black px-4 sm:px-6 lg:px-12 xl:px-20 py-16 max-w-7xl mx-auto grain"
+        className="relative w-full min-w-0 overflow-hidden rounded-3xl bg-black px-4 sm:px-6 lg:px-12 xl:px-20 py-16 max-w-7xl mx-auto grain"
       >
         {/* subtle grid overlay */}
         <div
@@ -48,9 +48,9 @@ const About = () => {
           }}
         />
 
-        <div className="flex flex-col lg:flex-row gap-12 justify-between items-start relative">
+        <div className="relative flex min-w-0 flex-col items-stretch justify-between gap-12 lg:flex-row lg:items-start">
           {/* Left */}
-          <div className="flex-1 space-y-4">
+          <div className="w-full min-w-0 flex-1 space-y-4">
             <p className="text-orange-500 font-mono text-lg">{`<about>`}</p>
             <RevealText as="h2" text="About Me" className="text-4xl lg:text-6xl font-bold leading-tight text-gray-100" />
 
@@ -61,7 +61,7 @@ const About = () => {
                 <span className="w-3 h-3 rounded-full bg-yellow-400/70" />
                 <span className="w-3 h-3 rounded-full bg-green-500/70" />
               </div>
-              <pre className="font-mono text-[13px] sm:text-sm overflow-x-auto whitespace-pre leading-6">
+              <pre className="w-full min-w-0 overflow-hidden whitespace-pre-wrap break-words font-mono text-[11px] leading-6 [overflow-wrap:anywhere] sm:overflow-x-auto sm:whitespace-pre sm:text-sm">
                 <code>
                   <span className="text-orange-400">{`// My tech stack\n`}</span>
                   <span className="text-pink-400">const</span>{" "}
@@ -94,7 +94,7 @@ const About = () => {
             </motion.div>
 
             {/* Marquee */}
-            <div className="overflow-hidden w-full max-w-xl mt-6 relative">
+            <div className="relative mt-6 w-full min-w-0 max-w-xl overflow-hidden">
               <div className="pointer-events-none absolute inset-y-0 left-0 w-16 bg-gradient-to-r from-black to-transparent z-10" />
               <div className="pointer-events-none absolute inset-y-0 right-0 w-16 bg-gradient-to-l from-black to-transparent z-10" />
               <div className="flex gap-10 w-max marquee-track">
@@ -113,7 +113,7 @@ const About = () => {
           </div>
 
           {/* Right */}
-          <motion.div style={{ y: rightY }} className="flex-1 space-y-10 max-w-xl">
+          <motion.div style={{ y: rightY }} className="w-full min-w-0 max-w-xl flex-1 space-y-10">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -136,7 +136,7 @@ const About = () => {
               <p className="text-gray-400 leading-relaxed mb-6">
                 My approach to development prioritizes both technical excellence and user needs. I am committed to continuous skill enhancement, embracing new technologies to deliver robust, scalable, and maintainable software.
               </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid w-full min-w-0 grid-cols-1 gap-4 sm:grid-cols-2">
                 {focusCards.map(([title, desc], idx) => (
                   <motion.div
                     key={idx}
@@ -145,7 +145,7 @@ const About = () => {
                     viewport={{ once: true }}
                     transition={{ duration: 0.4, delay: idx * 0.08 }}
                     whileHover={{ y: -4 }}
-                    className="bg-[#fff4eb] p-4 rounded-xl border border-orange-100 hover:shadow-lg hover:shadow-orange-200/30 transition-shadow"
+                    className="min-w-0 w-full break-words rounded-xl border border-orange-100 bg-[#fff4eb] p-4 hover:shadow-lg hover:shadow-orange-200/30 transition-shadow"
                   >
                     <h4 className="font-bold text-black">{title}</h4>
                     <p className="text-sm text-gray-600 mt-1">{desc}</p>
